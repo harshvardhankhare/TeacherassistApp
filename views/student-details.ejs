@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= student.name %> - Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary-color: #4e73df;
+      --success-color: #1cc88a;
+      --danger-color: #e74a3b;
+      --warning-color: #f6c23e;
+      --info-color: #36b9cc;
+    }
+    
+    body {
+      background-color: #f8f9fc;
+      color: #5a5c69;
+      padding-bottom: 2rem;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.1rem 0.5rem 0 rgba(58, 59, 69, 0.1);
+      margin-bottom: 1rem;
+    }
+    
+    .card-header {
+      background-color: #f8f9fc;
+      border-bottom: 1px solid #e3e6f0;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+    }
+    
+    .btn {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-success {
+      background-color: var(--success-color);
+      border-color: var(--success-color);
+    }
+    
+    .table-success { 
+      background-color: rgba(28, 200, 138, 0.1) !important; 
+    }
+    
+    .fee-paid { 
+      color: var(--success-color); 
+      font-weight: 600;
+    }
+    
+    .fee-unpaid { 
+      color: var(--danger-color); 
+      font-weight: 600;
+    }
+    
+    .calendar-day {
+      height: 35px;
+      padding: 0.25rem;
+      font-size: 0.8rem;
+    }
+    
+    .present-indicator {
+      width: 5px;
+      height: 5px;
+      bottom: 1px;
+    }
+    
+    .student-header {
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .student-header h2 {
+      font-size: 1.25rem;
+    }
+    
+    /* Fees Section */
+    .fee-btn {
+      padding: 0.5rem;
+      margin: 0.15rem;
+      font-size: 0.8rem;
+      min-width: 4.5rem;
+    }
+    
+    /* Notes Section */
+    .notes-container {
+      padding: 1rem;
+    }
+    
+    .note-item {
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+    
+    .note-date {
+      font-size: 0.7rem;
+    }
+    
+    /* Mobile-specific adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 0.5rem;
+      }
+      
+      .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      
+      .row > div {
+        margin-bottom: 0.75rem;
+      }
+      
+      .card-body {
+        padding: 1rem;
+      }
+      
+      .btn-lg {
+        padding: 0.75rem;
+        font-size: 1rem;
+      }
+      
+      /* Stack form elements vertically */
+      .add-note-form {
+        flex-direction: column;
+        gap: 0.5rem !important;
+      }
+      
+      .add-note-form .btn {
+        width: 100%;
+      }
+      
+      /* Calendar table adjustments */
+      table {
+        font-size: 0.8rem;
+      }
+      
+      th, td {
+        padding: 0.25rem;
+      }
+      
+      /* Month selector form */
+      .month-selector-form .col-md-5,
+      .month-selector-form .col-md-2 {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+    }
+    
+    /* Better touch targets */
+    .btn, .form-control, .list-group-item {
+      min-height: 2.75rem;
+    }
+    
+    /* Input focus states */
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+  </style>
+</head>
+<body class="container py-2">
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="student-header d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="h5 mb-1 text-gray-800">
+            <i class="bi bi-person-vcard me-1"></i><%= student.name %>
+          </h2>
+          <p class="mb-0 text-muted small">Student Records</p>
+        </div>
+        <a href="/students" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left"></i>
+          <span class="d-none d-sm-inline">Back</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 mb-3">
+      <div class="card">
+        <div class="card-header py-2">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="bi bi-check-circle me-1"></i>Mark Attendance
+          </h6>
+        </div>
+        <div class="card-body text-center p-2">
+          <form method="POST" action="/students/<%= student._id %>/attendance">
+            <button type="submit" class="btn btn-success btn-sm w-100 py-2">
+              <i class="bi bi-check-circle-fill me-1"></i>Mark Present Today
+            </button>
+            <p class="text-muted mt-1 mb-0 small"><%= new Date().toISOString().slice(0,10) %></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header py-2 d-flex justify-content-between align-items-center">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="bi bi-calendar-check me-1"></i>
+        Attendance - <%= year %>/<%= month + 1 %>
+      </h6>
+      <span class="badge bg-success">
+        <%= student.attendance.filter(d => d.getFullYear() === year && d.getMonth() === month).length %>
+      </span>
+    </div>
+    <div class="card-body p-1">
+      <div class="table-responsive">
+        <table class="table table-bordered text-center mb-0">
+          <thead class="table-light">
+            <tr>
+              <% ['S','M','T','W','T','F','S'].forEach(day => { %>
+                <th class="p-1"><%= day %></th>
+              <% }) %>
+            </tr>
+          </thead>
+          <tbody>
+            <% calendarGrid.forEach(week => { %>
+              <tr>
+                <% week.forEach(day => {
+                  const isoDate = day 
+                    ? `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}` 
+                    : '';
+                  const isPresent = day && student.attendance.some(d => d.toISOString().slice(0,10) === isoDate);
+                %>
+                  <td class="calendar-day <%= isPresent ? 'table-success' : '' %>">
+                    <%= day || '' %>
+                    <% if (isPresent) { %>
+                      <span class="present-indicator"></span>
+                    <% } %>
+                  </td>
+                <% }) %>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer p-2">
+      <form method="GET" action="/students/<%= student._id %>" class="row g-1 month-selector-form">
+        <div class="col-6 col-md-5">
+          <input name="year" type="number" value="<%= year %>" class="form-control form-control-sm" required>
+        </div>
+        <div class="col-6 col-md-5">
+          <select name="month" class="form-select form-select-sm" required>
+            <% ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].forEach((m, i) => { %>
+              <option value="<%= i %>" <%= i === month ? 'selected' : '' %>><%= m %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-12 col-md-2">
+          <button class="btn btn-primary btn-sm w-100">
+            <i class="bi bi-calendar3"></i>
+            <span class="d-none d-md-inline">View</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header py-2">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="bi bi-credit-card me-1"></i>
+        Fees - <%= year %>
+      </h6>
+    </div>
+    <div class="card-body p-2">
+      <div class="d-flex flex-wrap justify-content-center">
+        <% ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].forEach((monthName, i) => {
+          const fee = student.fees.find(f => f.year === year && f.month === monthName);
+        %>
+          <form method="POST" action="/students/<%= student._id %>/fee/<%= year %>/<%= monthName %>">
+            <button type="submit" class="fee-btn <%= fee ? 'fee-paid' : 'fee-unpaid' %>">
+              <i class="bi <%= fee ? 'bi-check-circle' : 'bi-x-circle' %>"></i>
+              <%= monthName.toUpperCase().substring(0,3) %>
+            </button>
+          </form>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes Section -->
+  <div class="card">
+    <div class="card-header py-2 d-flex justify-content-between align-items-center">
+      <h6 class="m-0 font-weight-bold text-primary">
+        <i class="bi bi-journal-text me-1"></i>
+        Notes
+      </h6>
+      <span class="badge bg-primary">
+        <%= student.notes.length %>
+      </span>
+    </div>
+    <div class="card-body p-2">
+      <form method="POST" action="/students/<%= student._id %>/notes" class="add-note-form d-flex gap-2 mb-3">
+        <input name="content" class="form-control form-control-sm" placeholder="Add note..." required>
+        <button class="btn btn-primary btn-sm">
+          <i class="bi bi-plus"></i>
+          <span class="d-none d-sm-inline">Add</span>
+        </button>
+      </form>
+      
+      <% if (student.notes.length > 0) { %>
+        <div class="list-group list-group-flush">
+          <% student.notes.slice().reverse().forEach(note => { %>
+            <div class="list-group-item note-item p-2">
+              <span class="note-date d-block mb-1">
+                <i class="bi bi-calendar me-1"></i>
+                <%= new Date(note.date).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                }) %>
+              </span>
+              <div class="d-flex justify-content-between align-items-start">
+  <span><%= note.content %></span>
+  <form method="POST" action="/students/<%= student._id %>/notes/<%= note._id %>/delete" onsubmit="return confirm('Delete this note?')" style="margin-left: 10px;">
+    <button class="btn btn-sm btn-outline-danger p-1" title="Delete" type="submit">
+      <i class="bi bi-trash"></i>
+    </button>
+  </form>
+</div>
+
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="text-center py-3">
+          <i class="bi bi-journal-x text-muted" style="font-size: 1.5rem;"></i>
+          <p class="text-muted mt-2 small">No notes yet</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Enhance mobile experience
+    document.addEventListener('DOMContentLoaded', function() {
+      // Better touch feedback
+      const buttons = document.querySelectorAll('.btn, .list-group-item, .fee-btn');
+      buttons.forEach(button => {
+        button.addEventListener('touchstart', function() {
+          this.classList.add('active');
+        });
+        button.addEventListener('touchend', function() {
+          this.classList.remove('active');
+        });
+      });
+      
+      // Prevent zoom on input focus
+      const inputs = document.querySelectorAll('input, select, textarea');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          document.querySelector('meta[name="viewport"]')
+            .setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+        });
+        input.addEventListener('blur', function() {
+          document.querySelector('meta[name="viewport"]')
+            .setAttribute('content', 'width=device-width, initial-scale=1');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

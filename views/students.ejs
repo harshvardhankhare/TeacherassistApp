@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary-color: #4e73df;
+      --success-color: #1cc88a;
+      --danger-color: #e74a3b;
+      --light-bg: #f8f9fc;
+    }
+    
+    body {
+      background-color: var(--light-bg);
+      color: #5a5c69;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .student-card {
+      transition: all 0.2s ease;
+      border-left: 3px solid var(--primary-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .header-section {
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .add-student-form {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 0.1rem 0.5rem rgba(58, 59, 69, 0.1);
+      margin-bottom: 1.5rem;
+    }
+    
+    .btn {
+      padding: 0.6rem;
+      font-size: 0.85rem;
+      min-height: 2.75rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger-color);
+      border-color: var(--danger-color);
+    }
+    
+    .empty-state {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 2rem 1rem;
+      text-align: center;
+      margin: 1rem;
+    }
+    
+    .empty-state-icon {
+      font-size: 2.5rem;
+      color: #dddfeb;
+      margin-bottom: 1rem;
+    }
+    
+    /* Mobile-specific optimizations */
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+      
+      .header-section h1 {
+        font-size: 1.25rem;
+      }
+      
+      .student-info small {
+        font-size: 0.75rem;
+      }
+      
+      .student-actions {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      
+      .student-actions .btn {
+        width: 100%;
+      }
+      
+      .add-student-form .col-md-9,
+      .add-student-form .col-md-3 {
+        width: 100%;
+        padding: 0;
+      }
+      
+      .add-student-form .input-group {
+        margin-bottom: 0.5rem;
+      }
+    }
+    
+    /* Floating Action Button */
+    .fab {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+    
+    /* Touch feedback */
+    .btn:active, .fab:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+    
+    /* Prevent zoom on input focus */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  </style>
+</head>
+<body class="container">
+  <div class="header-section">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h1 class="h4 mb-0">
+        <i class="bi bi-people-fill text-primary me-2"></i>
+        Student Manager
+      </h1>
+      <a href="/logout" class="btn btn-danger btn-sm">
+        <i class="bi bi-box-arrow-right"></i>
+        <span class="d-none d-sm-inline">Logout</span>
+      </a>
+    </div>
+    <p class="text-muted mb-0 small">Manage student records</p>
+  </div>
+
+  <div class="add-student-form">
+    <h2 class="h5 mb-2">
+      <i class="bi bi-person-plus text-primary me-1"></i>Add Student
+    </h2>
+    <form method="POST" action="/students/add">
+      <div class="row g-2">
+        <div class="col-12 col-md-9">
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-person"></i>
+            </span>
+            <input name="name" class="form-control" placeholder="Student name" required>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <button class="btn btn-primary w-100">
+            <i class="bi bi-plus-circle me-1"></i>Add
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header py-2 d-flex justify-content-between align-items-center">
+      <h2 class="h6 m-0">
+        <i class="bi bi-list-ul text-primary me-1"></i>
+        Students
+      </h2>
+      <span class="badge bg-primary">
+        <%= students.length %>
+      </span>
+    </div>
+    
+    <div class="card-body p-0">
+      <% if (students.length > 0) { %>
+        <div class="list-group list-group-flush">
+          <% students.forEach(student => { %>
+            <div class="list-group-item student-card p-2">
+              <div class="d-flex justify-content-between align-items-start flex-wrap">
+                <div class="d-flex align-items-center student-info mb-1 mb-md-0">
+                  <div class="me-2">
+                    <i class="bi bi-person-circle text-primary"></i>
+                  </div>
+                  <div>
+                    <h3 class="h6 mb-0"><%= student.name %></h3>
+                    <small class="text-muted">ID: <%= String(student._id).substring(18, 24) %>...</small>
+                  </div>
+                </div>
+                <div class="student-actions">
+                  <a href="/students/<%= student._id %>" class="btn btn-sm btn-primary">
+                    <i class="bi bi-eye me-1"></i>View
+                  </a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-state-icon">
+            <i class="bi bi-person-x"></i>
+          </div>
+          <h3 class="h6 mb-2">No Students</h3>
+          <p class="text-muted small">Add your first student above</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <a href="#add-student" class="fab d-md-none">
+    <i class="bi bi-plus fs-5"></i>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Enhance mobile experience
+    document.addEventListener('DOMContentLoaded', function() {
+      // Better touch feedback
+      document.querySelectorAll('.btn, .list-group-item').forEach(el => {
+        el.addEventListener('touchstart', () => el.classList.add('active'));
+        el.addEventListener('touchend', () => el.classList.remove('active'));
+      });
+      
+      // Auto-scroll to add form when FAB is clicked
+      document.querySelector('.fab').addEventListener('click', function(e) {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          document.querySelector('.add-student-form').scrollIntoView({ 
+            behavior: 'smooth' 
+          });
+          document.querySelector('input[name="name"]').focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
